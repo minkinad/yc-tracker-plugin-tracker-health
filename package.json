@@ -2,6 +2,8 @@
   "name": "yc-tracker-plugin-tracker-health",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
+  "packageManager": "npm@10.9.2",
   "type": "module",
   "keywords": [
     "react",
@@ -21,7 +23,7 @@
     "lint:styles": "stylelint '{styles,src}/**/*.{css,scss}' --allow-empty-input",
     "lint": "npm run lint:js && npm run lint:styles && npm run typecheck",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --passWithNoTests",
+    "test": "vitest run",
     "test:watch": "vitest"
   },
   "dependencies": {

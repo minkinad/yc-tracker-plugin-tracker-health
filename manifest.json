@@ -1,19 +1,18 @@
 {
   "$schema": "./manifest.schema.json",
   "manifest_version": 1,
-  "supported_services": [
-    "tracker"
-  ],
+  "supported_services": ["tracker"],
   "slug": "yc-tracker-plugin-tracker-health",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "name": {
     "ru": "Tracker Health",
     "en": "Tracker Health"
   },
   "description": {
-    "ru": "Quality gate for Yandex Tracker issues: analyzes task completeness, calculates a Health Score, and provides actionable recommendations",
+    "ru": "Проверяет полноту задач Yandex Tracker, рассчитывает Health Score и предлагает конкретные улучшения",
     "en": "Quality gate for Yandex Tracker issues: analyzes task completeness, calculates a Health Score, and provides actionable recommendations"
   },
+  "license": "MIT",
   "categories": [],
   "permissions": {
     "data": []
@@ -30,8 +29,8 @@
         {
           "entrypoint": "index.html",
           "title": {
-            "ru": "yc-tracker-plugin-tracker-health",
-            "en": "yc-tracker-plugin-tracker-health"
+            "ru": "Tracker Health",
+            "en": "Tracker Health"
           },
           "contextLevel": "full"
         }
@@ -40,8 +39,8 @@
         {
           "entrypoint": "index.html",
           "title": {
-            "ru": "yc-tracker-plugin-tracker-health",
-            "en": "yc-tracker-plugin-tracker-health"
+            "ru": "Tracker Health",
+            "en": "Tracker Health"
           },
           "contextLevel": "full"
         }
