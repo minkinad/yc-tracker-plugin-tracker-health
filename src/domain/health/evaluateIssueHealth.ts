@@ -1,9 +1,10 @@
 import { getHealthLevel } from './getHealthLevel';
+import { defaultRules } from './rules';
 import type { HealthRule, IssueHealthContext, IssueHealthResult } from './types';
 
 export function evaluateIssueHealth(
     context: IssueHealthContext,
-    rules: HealthRule[],
+    rules: HealthRule[] = defaultRules,
 ): IssueHealthResult {
     const results = rules.map((rule) => rule.evaluate(context));
     const applicableResults = results.filter((result) => result.status !== 'skipped');
