@@ -30,7 +30,9 @@ Tracker Health анализирует текущую задачу прямо в 
 
 Проблемные проверки показываются первыми. Детали и рекомендация доступны в компактной раскрываемой секции.
 
-![Tracker Health: задача с рекомендацией](./docs/screenshots/issue-health-warning.png)
+<p align="center">
+  <img src="./docs/screenshots/issue-health-warning.png" alt="Tracker Health: задача с рекомендацией">
+</p>
 
 <table>
   <tr>
