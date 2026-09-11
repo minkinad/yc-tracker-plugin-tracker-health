@@ -1,0 +1,51 @@
+{
+  "$schema": "./manifest.schema.json",
+  "manifest_version": 1,
+  "supported_services": [
+    "tracker"
+  ],
+  "slug": "yc-tracker-plugin-tracker-health",
+  "version": "0.0.1",
+  "name": {
+    "ru": "Tracker Health",
+    "en": "Tracker Health"
+  },
+  "description": {
+    "ru": "Quality gate for Yandex Tracker issues: analyzes task completeness, calculates a Health Score, and provides actionable recommendations",
+    "en": "Quality gate for Yandex Tracker issues: analyzes task completeness, calculates a Health Score, and provides actionable recommendations"
+  },
+  "categories": [],
+  "permissions": {
+    "data": []
+  },
+  "support": [
+    {
+      "type": "email",
+      "value": "-@yandex.ru"
+    }
+  ],
+  "slots": {
+    "tracker": {
+      "issue.block": [
+        {
+          "entrypoint": "index.html",
+          "title": {
+            "ru": "yc-tracker-plugin-tracker-health",
+            "en": "yc-tracker-plugin-tracker-health"
+          },
+          "contextLevel": "full"
+        }
+      ],
+      "drawer.issue.block": [
+        {
+          "entrypoint": "index.html",
+          "title": {
+            "ru": "yc-tracker-plugin-tracker-health",
+            "en": "yc-tracker-plugin-tracker-health"
+          },
+          "contextLevel": "full"
+        }
+      ]
+    }
+  }
+}
