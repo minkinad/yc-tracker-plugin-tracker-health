@@ -1,5 +1,9 @@
-import { Card, DefinitionList, ThemeProvider, Text as Typography } from '@gravity-ui/uikit';
+import { ThemeProvider } from '@gravity-ui/uikit';
 import { useTrackerPluginContext } from '@weavix/tracker-plugin-sdk-react';
+
+import { IssueHealthBlock } from '../components/IssueHealthBlock';
+import { evaluateIssueHealth } from '../domain/health/evaluateIssueHealth';
+import { mapTrackerIssueToHealthContext } from '../infrastructure/tracker/issue.mapper';
 
 const App = () => {
     const { theme, slotContext } = useTrackerPluginContext<'issue.block' | 'drawer.issue.block'>(
@@ -7,19 +11,22 @@ const App = () => {
     );
 
     if (!slotContext) {
-        return null;
+        return (
+            <ThemeProvider theme={theme}>
+                <IssueHealthBlock
+                    state="error"
+                    message="Текущая задача отсутствует в контексте issue.block."
+                />
+            </ThemeProvider>
+        );
     }
+
+    const context = mapTrackerIssueToHealthContext(slotContext);
+    const result = evaluateIssueHealth(context);
 
     return (
         <ThemeProvider theme={theme}>
-            <Card style={{ padding: '20px' }}>
-                <Typography variant="header-1" as="div" style={{ marginBottom: '16px' }}>
-                    Полный контекст (contextLevel: full)
-                </Typography>
-                <DefinitionList>
-                    <DefinitionList.Item name="Ключ">{slotContext.key}</DefinitionList.Item>
-                </DefinitionList>
-            </Card>
+            <IssueHealthBlock state="success" result={result} />
         </ThemeProvider>
     );
 };
