@@ -1,0 +1,37 @@
+.root {
+    min-width: 0;
+    padding: 8px 0;
+}
+
+.root + .root {
+    border-top: 1px solid var(--g-color-line-generic);
+}
+
+.icon {
+    flex: 0 0 auto;
+    margin-top: 2px;
+}
+
+.content {
+    min-width: 0;
+    flex: 1;
+}
+
+.title {
+    font-weight: 500;
+}
+
+.message,
+.recommendation {
+    overflow-wrap: anywhere;
+}
+
+.message {
+    margin-top: 2px;
+}
+
+.recommendation {
+    margin-top: 6px;
+    padding-left: 8px;
+    border-left: 2px solid var(--g-color-line-danger);
+}
