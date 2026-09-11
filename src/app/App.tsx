@@ -1,8 +1,6 @@
 import { ThemeProvider } from '@gravity-ui/uikit';
 import { hostApi, useTrackerPluginContext } from '@weavix/tracker-plugin-sdk-react';
 
-import { TrackerHealthErrorBoundary } from '../components/TrackerHealthErrorBoundary';
-
 import { TrackerHealthContent } from './TrackerHealthContent';
 
 const App = () => {
@@ -12,12 +10,10 @@ const App = () => {
 
     return (
         <ThemeProvider theme={theme}>
-            <TrackerHealthErrorBoundary>
-                <TrackerHealthContent
-                    issue={slotContext}
-                    getCurrentIssue={() => hostApi.getContext()}
-                />
-            </TrackerHealthErrorBoundary>
+            <TrackerHealthContent
+                issue={slotContext}
+                getCurrentIssue={() => hostApi.getContext()}
+            />
         </ThemeProvider>
     );
 };
