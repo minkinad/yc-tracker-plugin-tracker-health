@@ -4,42 +4,50 @@
   "supported_services": ["tracker"],
   "slug": "yc-tracker-plugin-tracker-health",
   "version": "0.1.0",
+
   "name": {
-    "ru": "Tracker Health",
+    "ru": "Контроль качества задач",
     "en": "Tracker Health"
   },
+
   "description": {
-    "ru": "Проверяет полноту задач Yandex Tracker, рассчитывает Health Score и предлагает конкретные улучшения",
+    "ru": "Проверяет полноту задач в Яндекс Трекере, рассчитывает показатель качества и предлагает конкретные улучшения",
     "en": "Quality gate for Yandex Tracker issues: analyzes task completeness, calculates a Health Score, and provides actionable recommendations"
   },
+
   "license": "MIT",
-  "categories": [],
+
+  "categories": ["productivity", "analytics", "development"],
+
   "permissions": {
     "data": []
   },
+
   "support": [
     {
       "type": "email",
-      "value": "-@yandex.ru"
+      "value": "petrushenko184@yandex.ru"
     }
   ],
+
   "slots": {
     "tracker": {
       "issue.block": [
         {
           "entrypoint": "index.html",
           "title": {
-            "ru": "Tracker Health",
+            "ru": "Качество задачи",
             "en": "Tracker Health"
           },
           "contextLevel": "full"
         }
       ],
+
       "drawer.issue.block": [
         {
           "entrypoint": "index.html",
           "title": {
-            "ru": "Tracker Health",
+            "ru": "Качество задачи",
             "en": "Tracker Health"
           },
           "contextLevel": "full"
