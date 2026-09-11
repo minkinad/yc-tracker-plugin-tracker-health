@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { evaluateIssueHealth } from '../../../src/domain/health/evaluateIssueHealth';
 import { getHealthLevel } from '../../../src/domain/health/getHealthLevel';
+import { defaultRules } from '../../../src/domain/health/rules';
 import type {
     HealthRule,
     HealthRuleId,
@@ -19,6 +20,20 @@ const context: IssueHealthContext = {
         id: 'user-id',
         displayName: 'User',
     },
+};
+
+const defaultRulesContext: IssueHealthContext = {
+    ...context,
+    description: `## Acceptance Criteria\n${'a'.repeat(100)}`,
+    priority: {
+        id: 'normal',
+        name: 'Normal',
+    },
+    issueType: {
+        id: 'task',
+        name: 'Task',
+    },
+    estimation: 3600,
 };
 
 function createRule(status: RuleStatus, weight: number, id: HealthRuleId = 'assignee'): HealthRule {
@@ -40,6 +55,33 @@ function createRule(status: RuleStatus, weight: number, id: HealthRuleId = 'assi
 }
 
 describe('evaluateIssueHealth', () => {
+    it.each([
+        ['all default rules pass', defaultRulesContext, 100],
+        ['assignee is absent', { ...defaultRulesContext, assignee: null }, 85],
+        [
+            'acceptance criteria are absent',
+            {
+                ...defaultRulesContext,
+                description: 'Описание без секции критериев приёмки. '.repeat(4),
+            },
+            70,
+        ],
+        [
+            'all optional fields are absent',
+            {
+                id: context.id,
+                key: context.key,
+                summary: context.summary,
+            },
+            0,
+        ],
+    ] satisfies ReadonlyArray<[string, IssueHealthContext, number]>)(
+        '%s',
+        (_case, issue, score) => {
+            expect(evaluateIssueHealth(issue, defaultRules).score).toBe(score);
+        },
+    );
+
     it('returns 100 when all applicable rules pass', () => {
         const rules = [createRule('passed', 40), createRule('passed', 60, 'priority')];
 
