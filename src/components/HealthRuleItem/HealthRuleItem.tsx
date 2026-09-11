@@ -7,13 +7,13 @@ import styles from './HealthRuleItem.module.scss';
 
 const STATUS_VIEW = {
     passed: {
-        label: 'Пройдено',
+        label: 'Готово',
         icon: CircleCheck,
         iconColor: 'positive',
         labelTheme: 'success',
     },
     failed: {
-        label: 'Нужно исправить',
+        label: 'Проблема',
         icon: CircleXmark,
         iconColor: 'danger',
         labelTheme: 'danger',
@@ -41,11 +41,22 @@ interface HealthRuleItemProps {
 export function HealthRuleItem({ result }: HealthRuleItemProps) {
     const view = STATUS_VIEW[result.status];
     const isFailed = result.status === 'failed';
+    const normalizedRecommendation = result.recommendation?.trim();
+    const recommendation =
+        isFailed && normalizedRecommendation && normalizedRecommendation !== result.message.trim()
+            ? normalizedRecommendation
+            : undefined;
 
     return (
-        <div className={styles.root} role="listitem">
+        <li className={`${styles.root} ${isFailed ? styles.failed : styles.compact}`}>
             <Flex alignItems="flex-start" gap="2">
-                <Icon className={styles.icon} data={view.icon} color={view.iconColor} size={16} />
+                <Icon
+                    className={styles.icon}
+                    data={view.icon}
+                    color={view.iconColor}
+                    size={16}
+                    aria-hidden="true"
+                />
 
                 <div className={styles.content}>
                     <Flex alignItems="center" gap="2" wrap>
@@ -55,24 +66,40 @@ export function HealthRuleItem({ result }: HealthRuleItemProps) {
                         <Label theme={view.labelTheme} size="xxs">
                             {view.label}
                         </Label>
+                        {isFailed ? null : (
+                            <Text
+                                className={styles.inlineMessage}
+                                variant="caption-2"
+                                color="secondary"
+                            >
+                                {result.message}
+                            </Text>
+                        )}
                     </Flex>
 
-                    <Text className={styles.message} variant="caption-2" color="secondary" as="div">
-                        {result.message}
-                    </Text>
+                    {isFailed ? (
+                        <Text
+                            className={styles.message}
+                            variant="caption-2"
+                            color="secondary"
+                            as="div"
+                        >
+                            {result.message}
+                        </Text>
+                    ) : null}
 
-                    {isFailed && result.recommendation ? (
+                    {recommendation ? (
                         <div className={styles.recommendation}>
                             <Text variant="caption-2" color="danger-heavy" as="div">
                                 Рекомендация
                             </Text>
                             <Text variant="body-1" as="div">
-                                {result.recommendation}
+                                {recommendation}
                             </Text>
                         </div>
                     ) : null}
                 </div>
             </Flex>
-        </div>
+        </li>
     );
 }

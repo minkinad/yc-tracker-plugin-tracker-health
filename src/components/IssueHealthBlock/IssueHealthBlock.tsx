@@ -1,5 +1,5 @@
 import { TriangleExclamation } from '@gravity-ui/icons';
-import { Card, Flex, Icon, Loader, Text } from '@gravity-ui/uikit';
+import { Button, Card, Flex, Icon, Loader, Text } from '@gravity-ui/uikit';
 
 import type { IssueHealthResult } from '../../domain/health/types';
 import { HealthProgress } from '../HealthProgress';
@@ -14,7 +14,8 @@ interface LoadingProps {
 
 interface ErrorProps {
     state: 'error';
-    message: string;
+    onRetry?: () => void;
+    retrying?: boolean;
 }
 
 interface SuccessProps {
@@ -27,7 +28,13 @@ export type IssueHealthBlockProps = LoadingProps | ErrorProps | SuccessProps;
 export function IssueHealthBlock(props: IssueHealthBlockProps) {
     if (props.state === 'loading') {
         return (
-            <Card className={styles.root} type="container" view="outlined">
+            <Card
+                className={styles.root}
+                type="container"
+                view="outlined"
+                role="status"
+                aria-live="polite"
+            >
                 <Flex alignItems="center" gap="2">
                     <Loader size="s" />
                     <Text variant="body-1">Анализируем задачу…</Text>
@@ -38,16 +45,35 @@ export function IssueHealthBlock(props: IssueHealthBlockProps) {
 
     if (props.state === 'error') {
         return (
-            <Card className={styles.root} type="container" view="outlined" theme="danger">
+            <Card
+                className={styles.root}
+                type="container"
+                view="outlined"
+                theme="danger"
+                role="alert"
+            >
                 <Flex alignItems="flex-start" gap="2">
-                    <Icon className={styles.stateIcon} data={TriangleExclamation} color="danger" />
+                    <Icon
+                        className={styles.stateIcon}
+                        data={TriangleExclamation}
+                        color="danger"
+                        aria-hidden="true"
+                    />
                     <div className={styles.stateContent}>
                         <Text variant="subheader-1" as="div">
                             Не удалось проанализировать задачу
                         </Text>
-                        <Text variant="body-1" color="secondary" as="div">
-                            {props.message}
-                        </Text>
+                        {props.onRetry ? (
+                            <Button
+                                className={styles.retry}
+                                view="action"
+                                size="s"
+                                loading={props.retrying}
+                                onClick={props.onRetry}
+                            >
+                                Повторить
+                            </Button>
+                        ) : null}
                     </div>
                 </Flex>
             </Card>
@@ -57,7 +83,11 @@ export function IssueHealthBlock(props: IssueHealthBlockProps) {
     return (
         <Card className={styles.root} type="container" view="outlined">
             <Flex direction="column" gap="3">
-                <HealthSummary score={props.result.score} level={props.result.level} />
+                <HealthSummary
+                    score={props.result.score}
+                    level={props.result.level}
+                    failedRules={props.result.failedRules}
+                />
                 <HealthProgress score={props.result.score} level={props.result.level} />
                 <HealthRulesList results={props.result.results} />
             </Flex>

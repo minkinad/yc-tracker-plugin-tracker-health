@@ -1,3 +1,20 @@
+.root,
+.summary {
+    min-width: 0;
+}
+
+.toggle {
+    justify-content: flex-start;
+    border-radius: 4px;
+}
+
+.toggle:focus-visible {
+    outline: 2px solid var(--g-color-line-focus);
+    outline-offset: 2px;
+}
+
 .list {
-    margin-top: 4px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
 }

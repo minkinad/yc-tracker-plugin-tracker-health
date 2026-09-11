@@ -1,10 +1,19 @@
 .root {
     min-width: 0;
-    padding: 8px 0;
 }
 
 .root + .root {
     border-top: 1px solid var(--g-color-line-generic);
+}
+
+.compact {
+    padding: 6px 0;
+}
+
+.failed {
+    padding: 8px;
+    background: var(--g-color-base-danger-light);
+    border-radius: 6px;
 }
 
 .icon {
@@ -22,8 +31,13 @@
 }
 
 .message,
+.inlineMessage,
 .recommendation {
     overflow-wrap: anywhere;
+}
+
+.inlineMessage::before {
+    content: '— ';
 }
 
 .message {
@@ -32,6 +46,4 @@
 
 .recommendation {
     margin-top: 6px;
-    padding-left: 8px;
-    border-left: 2px solid var(--g-color-line-danger);
 }
