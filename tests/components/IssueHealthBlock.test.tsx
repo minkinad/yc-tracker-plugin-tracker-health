@@ -1,8 +1,9 @@
-import type { ReactNode } from 'react';
+import type { AriaRole, ReactNode } from 'react';
 
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 
+import { TrackerHealthContent } from '../../src/app/TrackerHealthContent';
 import { IssueHealthBlock } from '../../src/components/IssueHealthBlock';
 import type {
     HealthRuleId,
@@ -28,17 +29,43 @@ vi.mock('@gravity-ui/icons', () => {
 vi.mock('@gravity-ui/uikit', async () => {
     const { createElement } = await import('react');
     type ChildrenProps = { children?: ReactNode };
+    type CardProps = ChildrenProps & {
+        role?: AriaRole;
+        'aria-live'?: 'off' | 'assertive' | 'polite';
+    };
+    type ButtonProps = ChildrenProps & {
+        loading?: boolean;
+        onClick?: () => void;
+    };
 
     const Container = ({ children }: ChildrenProps) => createElement('div', null, children);
+    const Card = ({ children, role, 'aria-live': ariaLive }: CardProps) =>
+        createElement('div', { role, 'aria-live': ariaLive }, children);
 
     return {
-        Card: Container,
+        Button: ({ children, loading, onClick }: ButtonProps) =>
+            createElement('button', { disabled: loading, onClick }, children),
+        Card,
         Flex: Container,
         Icon: () => null,
         Label: Container,
         Loader: () => createElement('span', null, 'loading'),
         Progress: ({ value }: { value: number }) => createElement('div', null, String(value)),
         Text: Container,
+    };
+});
+
+vi.mock('@weavix/tracker-components', async () => {
+    const { createElement } = await import('react');
+
+    return {
+        TrackerDisclosure: ({ summary, children }: { summary?: ReactNode; children?: ReactNode }) =>
+            createElement(
+                'div',
+                null,
+                createElement('button', { type: 'button', 'aria-expanded': false }, summary),
+                children,
+            ),
     };
 });
 
@@ -50,6 +77,12 @@ const RULE_IDS: HealthRuleId[] = [
     'estimate',
     'acceptance-criteria',
 ];
+
+const trackerIssue = {
+    id: 'issue-id',
+    key: 'QUEUE-42',
+    summary: 'Подготовить релиз',
+};
 
 function createRuleResults(status: RuleStatus, message = 'Результат проверки'): RuleResult[] {
     return RULE_IDS.map((ruleId) => ({
@@ -90,7 +123,8 @@ describe('IssueHealthBlock', () => {
 
         expect(html).toContain('aria-label="0 из 100"');
         expect(html).toContain('Требует внимания');
-        expect(html.match(/Нужно исправить/g)).toHaveLength(6);
+        expect(html).toContain('6 проблем');
+        expect(html.match(/Проблема/g)).toHaveLength(6);
         expect(html.match(/Рекомендация/g)).toHaveLength(6);
     });
 
@@ -99,8 +133,25 @@ describe('IssueHealthBlock', () => {
 
         expect(html).toContain('aria-label="100 из 100"');
         expect(html).toContain('Задача готова');
-        expect(html.match(/Пройдено/g)).toHaveLength(6);
+        expect(html).toContain('Проблем нет');
+        expect(html.match(/Готово/g)).toHaveLength(6);
         expect(html).not.toContain('Рекомендация');
+    });
+
+    it('renders the warning health level with text, not color alone', () => {
+        const result: IssueHealthResult = {
+            ...createResult(80, 'passed'),
+            level: 'warning',
+            score: 80,
+            passedWeight: 80,
+            failedRules: 1,
+            passedRules: 5,
+        };
+        const html = renderBlock({ state: 'success', result });
+
+        expect(html).toContain('aria-label="80 из 100"');
+        expect(html).toContain('Есть рекомендации');
+        expect(html).toContain('1 проблема');
     });
 
     it('renders long Russian strings without truncating their content', () => {
@@ -113,15 +164,98 @@ describe('IssueHealthBlock', () => {
     });
 
     it('renders the loading state', () => {
-        expect(renderBlock({ state: 'loading' })).toContain('Анализируем задачу');
+        const html = renderBlock({ state: 'loading' });
+
+        expect(html).toContain('role="status"');
+        expect(html).toContain('aria-live="polite"');
+        expect(html).toContain('Анализируем задачу');
     });
 
     it('renders the error state', () => {
-        const message = 'Контекст текущей задачи недоступен.';
+        const html = renderBlock({ state: 'error', onRetry: vi.fn() });
 
-        const html = renderBlock({ state: 'error', message });
+        expect(html).toContain('role="alert"');
+        expect(html).toContain('Не удалось проанализировать задачу');
+        expect(html).toContain('Повторить');
+        expect(html).not.toContain('Контекст');
+    });
+
+    it('shows failed rules before passed rules', () => {
+        const result = createResult(50, 'passed');
+        result.failedRules = 1;
+        result.passedRules = 1;
+        result.results = [
+            createRuleResults('passed')[0],
+            {
+                ...createRuleResults('failed')[1],
+                title: 'Первая проблема',
+            },
+        ];
+
+        const html = renderBlock({ state: 'success', result });
+
+        expect(html.indexOf('Первая проблема')).toBeLessThan(html.indexOf('Проверка assignee'));
+    });
+
+    it('does not repeat a recommendation identical to the message', () => {
+        const repeatedText = 'Добавьте исполнителя.';
+        const result = createResult(0, 'failed');
+        result.failedRules = 1;
+        result.results = [
+            {
+                ...result.results[0],
+                message: repeatedText,
+                recommendation: repeatedText,
+            },
+        ];
+
+        const html = renderBlock({ state: 'success', result });
+
+        expect(html.split(repeatedText)).toHaveLength(2);
+    });
+
+    it('contains mapper failures and shows only the safe error state', () => {
+        const html = renderToStaticMarkup(
+            <TrackerHealthContent issue={null} getCurrentIssue={() => Promise.resolve(null)} />,
+        );
 
         expect(html).toContain('Не удалось проанализировать задачу');
-        expect(html).toContain(message);
+        expect(html).toContain('Повторить');
+        expect(html).not.toContain('Tracker issue must be an object');
+    });
+
+    it('contains rule evaluation failures', () => {
+        const throwingRule = {
+            id: 'assignee',
+            name: 'Broken rule',
+            description: 'Throws while evaluating',
+            weight: 100,
+            evaluate() {
+                throw new Error('Rule failed unexpectedly');
+            },
+        } satisfies import('../../src/domain/health/types').HealthRule;
+        const html = renderToStaticMarkup(
+            <TrackerHealthContent
+                issue={trackerIssue}
+                getCurrentIssue={() => Promise.resolve(trackerIssue)}
+                rules={[throwingRule]}
+            />,
+        );
+
+        expect(html).toContain('Не удалось проанализировать задачу');
+        expect(html).not.toContain('Rule failed unexpectedly');
+    });
+
+    it('treats an empty rules array as an analysis failure', () => {
+        const html = renderToStaticMarkup(
+            <TrackerHealthContent
+                issue={trackerIssue}
+                getCurrentIssue={() => Promise.resolve(trackerIssue)}
+                rules={[]}
+            />,
+        );
+
+        expect(html).toContain('Не удалось проанализировать задачу');
+        expect(html).not.toContain('0 из 100');
     });
 });

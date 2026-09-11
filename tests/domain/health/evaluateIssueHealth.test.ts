@@ -112,6 +112,29 @@ describe('evaluateIssueHealth', () => {
         expect(Number.isFinite(result.score)).toBe(true);
     });
 
+    it('returns a deterministic finite result for an empty rules array', () => {
+        expect(evaluateIssueHealth(context, [])).toEqual({
+            score: 0,
+            level: 'critical',
+            passedWeight: 0,
+            totalWeight: 0,
+            passedRules: 0,
+            failedRules: 0,
+            skippedRules: 0,
+            results: [],
+        });
+    });
+
+    it('propagates a rule evaluation error to the application boundary', () => {
+        const rule = createRule('passed', 100);
+        const failure = new Error('Rule evaluation failed');
+        rule.evaluate = () => {
+            throw failure;
+        };
+
+        expect(() => evaluateIssueHealth(context, [rule])).toThrow(failure);
+    });
+
     it('evaluates every rule exactly once', () => {
         const firstRule = createRule('passed', 50);
         const secondRule = createRule('failed', 50, 'priority');
@@ -153,6 +176,7 @@ describe('evaluateIssueHealth', () => {
 
 describe('getHealthLevel', () => {
     it.each([
+        [0, 'critical'],
         [69, 'critical'],
         [70, 'warning'],
         [89, 'warning'],

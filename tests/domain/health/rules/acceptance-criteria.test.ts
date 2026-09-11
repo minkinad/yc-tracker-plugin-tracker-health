@@ -6,17 +6,22 @@ import { acceptanceCriteriaRule } from '../../../../src/domain/health/rules/acce
 import { createContext } from './testContext';
 
 describe('acceptanceCriteriaRule', () => {
-    it('passes when the description contains an acceptance criteria section', () => {
-        const result = acceptanceCriteriaRule.evaluate(
-            createContext({ description: 'Контекст задачи\n\n## Критерии приёмки\n\n- Условие' }),
-        );
+    it.each([
+        ['English heading', '## Acceptance Criteria\n\n- Done'],
+        ['Russian heading with ё', '### Критерии приёмки\n\n- Готово'],
+        ['Russian heading with е', '## Критерии приемки\n\n- Готово'],
+        ['plain heading with a colon', 'Описание\nAcceptance Criteria:\n- Done'],
+        ['uppercase heading', 'КРИТЕРИИ ГОТОВНОСТИ:\n- ГОТОВО'],
+        ['Windows newlines', 'Описание\r\n## Критерии приёмки\r\n- Готово'],
+    ])('passes for a %s', (_caseName, description) => {
+        const result = acceptanceCriteriaRule.evaluate(createContext({ description }));
 
         expect(result.status).toBe('passed');
         expect(result.weight).toBe(acceptanceCriteriaRule.weight);
         expect(result.recommendation).toBeUndefined();
     });
 
-    it.each([null, undefined, '', 'Нам нужны хорошие критерии приёмки'])(
+    it.each([null, undefined, '', '   ', '\t\n'])(
         'fails when the description is %s',
         (description) => {
             const result = acceptanceCriteriaRule.evaluate(createContext({ description }));
@@ -28,6 +33,17 @@ describe('acceptanceCriteriaRule', () => {
             expect(result.recommendation).not.toBe('');
         },
     );
+
+    it.each([
+        'Нам нужно добавить acceptance criteria в будущем',
+        'Хорошие критерии приёмки помогают разработке',
+        'Проверить критерии готовности задачи',
+    ])('rejects an inline mention: "%s"', (description) => {
+        const result = acceptanceCriteriaRule.evaluate(createContext({ description }));
+
+        expect(result.status).toBe('failed');
+        expect(result.recommendation).toBeTruthy();
+    });
 });
 
 describe('defaultRules', () => {
