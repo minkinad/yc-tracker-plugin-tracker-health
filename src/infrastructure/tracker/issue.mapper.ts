@@ -7,13 +7,20 @@ interface MappedTrackerReference {
     display: string;
 }
 
+export class TrackerIssueMappingError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = 'TrackerIssueMappingError';
+    }
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
     return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
 function mapReferenceId(value: unknown): string | null {
-    if (typeof value === 'string' && value.length > 0) {
-        return value;
+    if (typeof value === 'string' && value.trim().length > 0) {
+        return value.trim();
     }
 
     if (typeof value === 'number' && Number.isFinite(value)) {
@@ -60,7 +67,31 @@ function mapEstimation(value: unknown): number | null {
     return typeof value === 'number' && Number.isFinite(value) ? value : null;
 }
 
-export function mapTrackerIssueToHealthContext(issue: TrackerIssue): IssueHealthContext {
+function mapRequiredString(issue: Record<string, unknown>, field: 'id' | 'key'): string {
+    const value = issue[field];
+
+    if (typeof value !== 'string' || value.trim().length === 0) {
+        throw new TrackerIssueMappingError(`Tracker issue has an invalid ${field} field.`);
+    }
+
+    return value.trim();
+}
+
+export function mapTrackerIssueToHealthContext(value: unknown): IssueHealthContext {
+    if (!isRecord(value)) {
+        throw new TrackerIssueMappingError('Tracker issue must be an object.');
+    }
+
+    const issue: TrackerIssue = {
+        id: mapRequiredString(value, 'id'),
+        key: mapRequiredString(value, 'key'),
+        summary: value.summary,
+        description: value.description,
+        assignee: value.assignee,
+        priority: value.priority,
+        type: value.type,
+        estimation: value.estimation,
+    };
     const assignee = mapTrackerReference(issue.assignee);
     const priority = mapTrackerReference(issue.priority);
     const issueType = mapTrackerReference(issue.type);
