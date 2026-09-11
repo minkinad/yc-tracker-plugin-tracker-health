@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+    <title id="title">Tracker Health</title>
+    <defs>
+        <clipPath id="card-shape">
+            <rect x="48" y="56" width="416" height="400" rx="72" />
+        </clipPath>
+    </defs>
+
+    <g clip-path="url(#card-shape)">
+        <rect x="48" y="56" width="416" height="400" fill="#ffffff" />
+        <rect x="48" y="56" width="416" height="120" fill="#ffcc00" />
+    </g>
+
+    <rect
+        x="48"
+        y="56"
+        width="416"
+        height="400"
+        rx="72"
+        fill="none"
+        stroke="#252525"
+        stroke-width="16"
+    />
+
+    <circle cx="104" cy="116" r="13" fill="#252525" />
+    <circle cx="146" cy="116" r="13" fill="#252525" />
+    <circle cx="188" cy="116" r="13" fill="#252525" />
+
+    <path
+        d="M104 232h146M104 278h104"
+        fill="none"
+        stroke="#252525"
+        stroke-linecap="round"
+        stroke-width="24"
+    />
+    <path
+        d="M96 352h104l30-54 34 92 46-138 32 100h76"
+        fill="none"
+        stroke="#ffcc00"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="22"
+    />
+
+    <circle cx="392" cy="390" r="94" fill="#21c55d" stroke="#252525" stroke-width="14" />
+    <path
+        d="m344 390 31 31 63-67"
+        fill="none"
+        stroke="#ffffff"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="25"
+    />
+</svg>
