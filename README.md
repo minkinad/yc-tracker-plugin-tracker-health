@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./public/tracker-health-mark.png" width="128" height="128" alt="Логотип Tracker Health">
+  <img src="./docs/assets/tracker-health-mark.png" width="128" height="128" alt="Логотип Tracker Health">
 </p>
 
 <h1 align="center">Tracker Health</h1>
@@ -214,6 +214,8 @@ GitHub Actions запускает установку через lockfile, lint, 
 ## Статус проекта
 
 `v0.1.0` — функционально завершённый первый релиз. Плагин пока не заявлен как опубликованный в публичном каталоге Yandex Tracker.
+
+История изменений ведётся в [CHANGELOG.md](CHANGELOG.md).
 
 ## План развития
 

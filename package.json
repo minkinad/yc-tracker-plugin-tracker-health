@@ -2,7 +2,17 @@
   "name": "yc-tracker-plugin-tracker-health",
   "version": "0.1.0",
   "private": true,
+  "description": "Quality gate for Yandex Tracker issues",
+  "author": "Aleksandr Minkin",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/minkinad/yc-tracker-plugin-tracker-health.git"
+  },
+  "bugs": {
+    "url": "https://github.com/minkinad/yc-tracker-plugin-tracker-health/issues"
+  },
+  "homepage": "https://github.com/minkinad/yc-tracker-plugin-tracker-health#readme",
   "packageManager": "npm@10.9.2",
   "type": "module",
   "keywords": [
@@ -12,7 +22,6 @@
     "gravity-ui",
     "yandex-tracker"
   ],
-  "description": "Quality gate for Yandex Tracker issues",
   "engines": {
     "node": ">=22.12.0"
   },

@@ -13,7 +13,12 @@ config.json
 # Logs and environment
 *.log
 .env
-.env.local
+.env.*
+!.env.example
+
+# Test and tool output
+coverage/
+.vite/
 
 # Editors and operating systems
 .DS_Store
