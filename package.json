@@ -1,6 +1,6 @@
 {
   "name": "yc-tracker-plugin-tracker-health",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Quality gate for Yandex Tracker issues",
   "author": "Aleksandr Minkin",
@@ -23,14 +23,14 @@
     "yandex-tracker"
   ],
   "engines": {
-    "node": ">=22.12.0"
+    "node": ">=22.16.0"
   },
   "scripts": {
     "dev": "node node_modules/vite/bin/vite.js --logLevel silent",
     "build": "tsc && node node_modules/vite/bin/vite.js build",
     "lint:js": "eslint --ext .js,.jsx,.ts,.tsx .",
     "lint:styles": "stylelint '{styles,src}/**/*.{css,scss}' --allow-empty-input",
-    "lint": "npm run lint:js && npm run lint:styles && npm run typecheck",
+    "lint": "npm run lint:js && npm run lint:styles",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest"

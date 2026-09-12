@@ -5,6 +5,22 @@
 
 ## [Unreleased]
 
+## [0.1.1] — 2026-09-12
+
+### Изменено
+
+- Уточнены локализованные названия, категории и описание для будущей публикации в каталоге Яндекс Трекера.
+- Минимальная версия Node.js повышена до `22.16.0`; lint и TypeScript typecheck разделены на независимые проверки.
+- Дополнены README и описание для Marketplace, включая сведения о статусе независимого open-source проекта.
+
+### Правовая информация
+
+- Восстановлена MIT License для оригинального кода Tracker Health.
+- Добавлен `NOTICE.md` с информацией о сторонних SDK, библиотеках, сгенерированных материалах и шрифтах.
+- Уточнены границы применения MIT License и принадлежность товарных знаков.
+
+Функциональность, Health Engine, правила, веса и UI-поведение не изменялись.
+
 ## [0.1.0] — 2026-09-12
 
 ### Добавлено
@@ -25,5 +41,6 @@
 - Анализ выполняется локально внутри плагина без внешнего backend, отдельной базы данных и постоянного хранилища.
 - Данные задачи не передаются внешним сервисам; AI и ML в v0.1 не используются.
 
-[Unreleased]: https://github.com/minkinad/yc-tracker-plugin-tracker-health/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/minkinad/yc-tracker-plugin-tracker-health/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/minkinad/yc-tracker-plugin-tracker-health/releases/tag/v0.1.1
 [0.1.0]: https://github.com/minkinad/yc-tracker-plugin-tracker-health/releases/tag/v0.1.0

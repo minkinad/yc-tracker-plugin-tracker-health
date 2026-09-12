@@ -11,7 +11,7 @@
 
 <p align="center">
   <a href="https://github.com/minkinad/yc-tracker-plugin-tracker-health/actions/workflows/ci.yml"><img src="https://github.com/minkinad/yc-tracker-plugin-tracker-health/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <img src="https://img.shields.io/badge/version-v0.1.0-111111" alt="Версия v0.1.0">
+  <img src="https://img.shields.io/badge/version-v0.1.1-111111" alt="Версия v0.1.1">
   <a href="https://yandex.ru/support/tracker/ru/plugins/"><img src="https://img.shields.io/badge/Yandex_Tracker-plugin-FFCC00?logo=yandex&logoColor=000000" alt="Плагин Yandex Tracker"></a>
   <a href="https://yandex.ru/support/tracker/ru/plugins/tools/"><img src="https://img.shields.io/badge/Tracker_SDK_React-0.1.0-5282FF" alt="Tracker Plugin SDK React 0.1.0"></a>
   <img src="https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white" alt="TypeScript strict">
@@ -174,7 +174,7 @@ Tracker Health анализирует только данные открытой
 
 Требования:
 
-- Node.js `>=22.12.0`;
+- Node.js `>=22.16.0`;
 - npm `10.9.2`;
 - Tracker Plugin CLI для запуска внутри Yandex Tracker.
 
@@ -215,7 +215,7 @@ GitHub Actions запускает установку через lockfile, lint, 
 
 ## Статус проекта
 
-`v0.1.0` — функционально завершённый первый релиз. Плагин пока не заявлен как опубликованный в публичном каталоге Yandex Tracker.
+`v0.1.1` — актуальный стабильный релиз. Плагин пока не заявлен как опубликованный в публичном каталоге Yandex Tracker.
 
 История изменений ведётся в [CHANGELOG.md](CHANGELOG.md).
 
@@ -245,8 +245,12 @@ GitHub Actions запускает установку через lockfile, lint, 
 
 ## Disclaimer
 
-Tracker Health — это независимый проект с открытым исходным кодом,
-не являющийся официальным продуктом Яндекса.
+Tracker Health — независимый open-source проект и не является официальным продуктом Яндекса.
 
-Yandex Tracker и связанные с ним товарные знаки принадлежат
-их соответствующим владельцам.
+Яндекс Трекер и связанные с ним наименования и товарные знаки принадлежат их правообладателям.
+
+Для интеграции с платформой проект использует Tracker Plugin SDK (`@weavix/tracker-plugin-sdk-react`), Tracker Components и Gravity UI. На сторонние компоненты распространяются их собственные условия и лицензии, перечисленные в [NOTICE.md](NOTICE.md).
+
+## Лицензия
+
+Оригинальный код Tracker Health распространяется по лицензии [MIT](LICENSE). Это не изменяет условий использования сторонних зависимостей, сгенерированных материалов, шрифтов и товарных знаков.
